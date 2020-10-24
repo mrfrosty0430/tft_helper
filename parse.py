@@ -56,7 +56,7 @@ def start():
                     label_min = label["min"]
                     if traitCount[user_trait] >= label_min:
                         trait_label = label["style"]
-                traitSynergy[user_trait] = (trait_label,traitCount[user_trait])
+                traitSynergy[trait["name"]] = (trait_label,traitCount[user_trait])
     print(traitSynergy)
 
 
