@@ -21,23 +21,24 @@ def buildTraits(champs):
 
 
 def init(data):
-
 	data.time = 0
 
 
 
 def timerFired(data):
-
 	# print(data.time)
-
 	# data.time+=data.timerDelay
-
 	pass
 
 
 
-def addChamp(champ):
-    print(champ)
+def addChamp(data,i,champData):
+    factor = 64
+    limit = data.width//factor
+    row = data.mousey//factor
+    col = data.mousex // factor
+    print(i,champData[int(row*limit+col)])
+
 
 
 
@@ -46,23 +47,20 @@ def redrawAll(canvas,data):
     champData = json.load(champFile)
     photoList = []
     i = 0
-    factor = 32
+    factor = 64
     limit = data.width//factor
 
-    
-    
+
+
     for champ in champData:
         champID = champ["championId"]
         photo = PhotoImage(file="champions/" + champID+".png" )
-        b = Button(canvas, text = champID, height=factor, width =factor, image = photo, command=lambda: addChamp(champ))
-        b.pack()
+        b = Button(canvas, text = champID, height=factor, width =factor, image = photo, command=lambda: addChamp(data,i,champData))
         b.place(x=i%limit * factor, y=i // limit * factor)
-        photoList.append(b)
-##        print(photo)
+        b.pack()
         label = Label(image=photo)
         label.image=photo
-        photoList.append(label.image)
-##        label.pack()
+        photoList.append(photo)
 
         i += 1
 
@@ -73,12 +71,13 @@ def redrawAll(canvas,data):
 
 
 
+
 def mousePressed(event,data):
-	pass
+	print(data.mousex,data.mousey)
 
 def keyPressed(event,data):
 	pass
-    
+
 def getChamp(apiKey):
 	myChamp = input("choose your champion \n")
 	yourChamp = input("choose your enemy chamipon \n")
@@ -121,6 +120,10 @@ def run(width, height):
         # pause, then call timerFired again
         canvas.after(data.timerDelay, timerFiredWrapper, canvas, data)
 
+    def set_motion(event,canvas, data):
+        data.mousex=canvas.canvasx(event.x)
+        data.mousey=canvas.canvasy(event.y)
+
     # Set up data and call init
 
     class Struct(object): pass
@@ -138,6 +141,11 @@ def run(width, height):
                             mousePressedWrapper(event, canvas, data))
     root.bind("<Key>", lambda event:
                             keyPressedWrapper(event, canvas, data))
+##    def motion(event):
+##    x, y = event.x, event.y
+##    print('{}, {}'.format(x, y))
+
+    root.bind('<Motion>', lambda event: set_motion(event,canvas, data))
     timerFiredWrapper(canvas, data)
     # and launch the app
     root.mainloop()  # blocks until window is closed
@@ -197,5 +205,5 @@ def start():
 
 
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     start()
