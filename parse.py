@@ -162,7 +162,7 @@ def run(width, height):
 
 
 def start():
-    apiKey = "RGAPI-9fa98d84-5df6-46d9-ae80-f8a1f71827a2"
+    apiKey = ### insert api key here ###
     itemFile = open("items.json")
     itemData = json.load(itemFile)
 
